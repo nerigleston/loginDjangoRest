@@ -14,13 +14,13 @@ Content-Type: application/json
 
 GET http://127.0.0.1:8000/test_token
 Content-Type: application/json
-Authorization: token 64a342b8ca3654c13ed01feeaef1649563590474
+Authorization: token xxx
 
 ###
 
 DELETE http://127.0.0.1:8000/delete_user/1
 Content-Type: application/json
-Authorization: token 64a342b8ca3654c13ed01feeaef1649563590474
+Authorization: token xxx
 
 ###
 

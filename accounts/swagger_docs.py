@@ -87,3 +87,39 @@ delete_user_swagger = swagger_auto_schema(
     },
     operation_description='Exclui um usuário com base no ID fornecido.'
 )
+
+update_user_swagger = swagger_auto_schema(
+    methods=['PUT'],
+    manual_parameters=[
+        openapi.Parameter(
+            'Authorization',
+            openapi.IN_HEADER,
+            description='Token de autenticação',
+            format='Token <token_value>',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+        openapi.Parameter(
+            'id',
+            openapi.IN_PATH,
+            description='ID do usuário a ser atualizado',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+    ],
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'username': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+            'email': openapi.Schema(type=openapi.TYPE_STRING),
+        },
+        required=['username', 'password', 'email']
+    ),
+    responses={
+        200: 'Usuário atualizado com sucesso.',
+        400: 'Requisição inválida. Verifique os dados fornecidos.',
+        403: 'Acesso proibido. Verifique suas permissões.',
+    },
+    operation_description='Atualiza as informações do usuário com base no ID fornecido.'
+)

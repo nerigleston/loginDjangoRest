@@ -12,7 +12,8 @@ from .swagger_docs import (
     login_swagger,
     test_token_swagger,
     get_all_users_swagger,
-    delete_user_swagger
+    delete_user_swagger,
+    update_user_swagger
 )
 
 
@@ -73,3 +74,22 @@ def delete_user(request, id):
 
     user.delete()
     return Response("Usuário deletado com sucesso", status=status.HTTP_204_NO_CONTENT)
+
+
+@update_user_swagger
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def update_user(request, id):
+    user = get_object_or_404(User, id=id)
+
+    if request.user != user:
+        return Response("Você não tem permissão para atualizar este usuário", status=status.HTTP_403_FORBIDDEN)
+
+    serializer = UserSerializer(user, data=request.data)
+    if serializer.is_valid():
+        user = serializer.save()
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

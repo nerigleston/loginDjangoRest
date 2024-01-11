@@ -51,7 +51,8 @@ def login(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def test_token(request):
-    return Response("Token Válido", status=status.HTTP_200_OK)
+    user = request.user
+    return Response("Token Válido para o usuário {}".format(user.username), status=status.HTTP_200_OK)
 
 
 @get_all_users_swagger

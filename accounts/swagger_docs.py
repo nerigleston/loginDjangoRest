@@ -13,10 +13,10 @@ signup_swagger = swagger_auto_schema(
         required=['username', 'password', 'email']
     ),
     responses={
-        201: 'Descrição da resposta bem-sucedida do cadastro',
-        400: 'Descrição da resposta de requisição inválida',
+        201: 'Cadastro realizado com sucesso.',
+        400: 'Requisição inválida. Verifique os dados fornecidos.',
     },
-    operation_description='Descrição detalhada da operação de cadastro'
+    operation_description='Realiza o cadastro de um novo usuário.'
 )
 
 login_swagger = swagger_auto_schema(
@@ -30,10 +30,10 @@ login_swagger = swagger_auto_schema(
         required=['username', 'password']
     ),
     responses={
-        200: 'Descrição da resposta bem-sucedida do login',
-        401: 'Descrição da resposta não autorizada',
+        200: 'Login bem-sucedido.',
+        401: 'Não autorizado. Verifique as credenciais fornecidas.',
     },
-    operation_description='Descrição detalhada da operação de login'
+    operation_description='Realiza o login do usuário.'
 )
 
 test_token_swagger = swagger_auto_schema(
@@ -49,17 +49,17 @@ test_token_swagger = swagger_auto_schema(
         ),
     ],
     responses={
-        200: 'Descrição da resposta bem-sucedida do teste de token',
+        200: 'Token válido. A autenticação foi bem-sucedida.',
     },
-    operation_description='Descrição detalhada da operação de teste de token',
+    operation_description='Realiza o teste de validade do token de autenticação.'
 )
 
 get_all_users_swagger = swagger_auto_schema(
     methods=['GET'],
     responses={
-        200: 'Descrição da resposta bem-sucedida de obtenção de todos os usuários',
+        200: 'Lista de usuários obtida com sucesso.',
     },
-    operation_description='Descrição detalhada da operação de obtenção de todos os usuários'
+    operation_description='Obtém a lista de todos os usuários cadastrados.'
 )
 
 delete_user_swagger = swagger_auto_schema(
@@ -82,8 +82,8 @@ delete_user_swagger = swagger_auto_schema(
         ),
     ],
     responses={
-        204: 'Descrição da resposta bem-sucedida da exclusão de usuário',
-        403: 'Descrição da resposta proibida',
+        204: 'Usuário excluído com sucesso.',
+        403: 'Acesso proibido. Verifique suas permissões.',
     },
-    operation_description='Descrição detalhada da operação de exclusão de usuário',
+    operation_description='Exclui um usuário com base no ID fornecido.'
 )

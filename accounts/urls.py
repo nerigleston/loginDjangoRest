@@ -25,6 +25,7 @@ urlpatterns = [
     path('get_all_users', views.get_all_users),
     path('delete_user/<int:id>', views.delete_user),
     path('update_user/<int:id>', views.update_user),
+    path('get_user_by_id/<int:id>', views.get_user_by_id),
     path('', schema_view.with_ui('swagger',
          cache_timeout=0), name='schema-swagger-ui'),
 ]

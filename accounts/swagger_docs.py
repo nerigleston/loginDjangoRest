@@ -123,3 +123,30 @@ update_user_swagger = swagger_auto_schema(
     },
     operation_description='Atualiza as informações do usuário com base no ID fornecido.'
 )
+
+get_user_by_id_swagger = swagger_auto_schema(
+    methods=['GET'],
+    manual_parameters=[
+        openapi.Parameter(
+            'Authorization',
+            openapi.IN_HEADER,
+            description='Token de autenticação',
+            format='Token <token_value>',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+        openapi.Parameter(
+            'id',
+            openapi.IN_PATH,
+            description='ID do usuário a ser obtido',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+    ],
+    responses={
+        200: 'Informações do usuário obtidas com sucesso.',
+        403: 'Acesso proibido. Verifique suas permissões.',
+        404: 'Usuário não encontrado.',
+    },
+    operation_description='Obtém as informações do usuário com base no ID fornecido.'
+)

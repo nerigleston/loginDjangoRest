@@ -1,0 +1,360 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Login",
+    "description": "API Teste Login - Django Rest Framework",
+    "version": "v1"
+  },
+  "host": "localhost:8001",
+  "schemes": [
+    "http"
+  ],
+  "basePath": "/",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Basic": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "Basic": [
+        
+      ]
+    }
+  ],
+  "paths": {
+    "/delete_user/{id}": {
+      "delete": {
+        "operationId": "delete_user_delete",
+        "description": "Exclui um usuário com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser excluído",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário excluído com sucesso."
+          },
+          "403": {
+            "description": "Acesso proibido. Verifique suas permissões."
+          }
+        },
+        "tags": [
+          "delete_user"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/get_all_users": {
+      "get": {
+        "operationId": "get_all_users_list",
+        "description": "Obtém a lista de todos os usuários cadastrados.",
+        "parameters": [
+          
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários obtida com sucesso."
+          }
+        },
+        "tags": [
+          "get_all_users"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/get_user_by_id/{id}": {
+      "get": {
+        "operationId": "get_user_by_id_read",
+        "description": "Obtém as informações do usuário com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser obtido",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações do usuário obtidas com sucesso."
+          },
+          "403": {
+            "description": "Acesso proibido. Verifique suas permissões."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
+        },
+        "tags": [
+          "get_user_by_id"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/get_user_by_token": {
+      "get": {
+        "operationId": "get_user_by_token_list",
+        "description": "Obtém as informações do usuário com base no token de autenticação.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações do usuário obtidas com sucesso."
+          },
+          "401": {
+            "description": "Não autorizado. Verifique as credenciais fornecidas."
+          },
+          "403": {
+            "description": "Acesso proibido. Verifique suas permissões."
+          }
+        },
+        "tags": [
+          "get_user_by_token"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/login": {
+      "post": {
+        "operationId": "login_create",
+        "description": "Realiza o login do usuário.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "username",
+                "password"
+              ],
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login bem-sucedido."
+          },
+          "401": {
+            "description": "Não autorizado. Verifique as credenciais fornecidas."
+          }
+        },
+        "tags": [
+          "login"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/signup": {
+      "post": {
+        "operationId": "signup_create",
+        "description": "Realiza o cadastro de um novo usuário.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "username",
+                "password",
+                "email"
+              ],
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cadastro realizado com sucesso."
+          },
+          "400": {
+            "description": "Requisição inválida. Verifique os dados fornecidos."
+          }
+        },
+        "tags": [
+          "signup"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/test_token": {
+      "get": {
+        "operationId": "test_token_list",
+        "description": "Realiza o teste de validade do token de autenticação.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token válido. A autenticação foi bem-sucedida."
+          }
+        },
+        "tags": [
+          "test_token"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/update_user/{id}": {
+      "put": {
+        "operationId": "update_user_update",
+        "description": "Atualiza as informações do usuário com base no ID fornecido.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "username",
+                "password",
+                "email"
+              ],
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário a ser atualizado",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Requisição inválida. Verifique os dados fornecidos."
+          },
+          "403": {
+            "description": "Acesso proibido. Verifique suas permissões."
+          }
+        },
+        "tags": [
+          "update_user"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    
+  }
+}

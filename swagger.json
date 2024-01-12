@@ -5,7 +5,7 @@
     "description": "API Teste Login - Django Rest Framework",
     "version": "v1"
   },
-  "host": "localhost:8001",
+  "host": "127.0.0.1:8001",
   "schemes": [
     "http"
   ],
@@ -205,6 +205,36 @@
         },
         "tags": [
           "login"
+        ]
+      },
+      "parameters": [
+        
+      ]
+    },
+    "/logout": {
+      "post": {
+        "operationId": "logout_create",
+        "description": "Realiza o logout do usuário.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Token de autenticação",
+            "required": true,
+            "type": "string",
+            "format": "Token <token_value>"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout realizado com sucesso."
+          },
+          "401": {
+            "description": "Não autorizado. Verifique as credenciais fornecidas."
+          }
+        },
+        "tags": [
+          "logout"
         ]
       },
       "parameters": [

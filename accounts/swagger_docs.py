@@ -171,3 +171,22 @@ get_user_by_token_swagger = swagger_auto_schema(
     },
     operation_description='Obtém as informações do usuário com base no token de autenticação.'
 )
+
+logout_swagger = swagger_auto_schema(
+    methods=['POST'],
+    manual_parameters=[
+        openapi.Parameter(
+            'Authorization',
+            openapi.IN_HEADER,
+            description='Token de autenticação',
+            format='Token <token_value>',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+    ],
+    responses={
+        200: 'Logout realizado com sucesso.',
+        401: 'Não autorizado. Verifique as credenciais fornecidas.',
+    },
+    operation_description='Realiza o logout do usuário.'
+)

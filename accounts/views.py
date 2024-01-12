@@ -6,7 +6,10 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import UserSerializer
+from django.conf import settings
+from django.middleware import csrf
 from .swagger_docs import (
     signup_swagger,
     login_swagger,
@@ -15,7 +18,8 @@ from .swagger_docs import (
     delete_user_swagger,
     update_user_swagger,
     get_user_by_id_swagger,
-    get_user_by_token_swagger
+    get_user_by_token_swagger,
+    logout_swagger
 )
 
 
@@ -27,8 +31,42 @@ def signup(request):
         user = serializer.save()
         user.set_password(serializer.validated_data['password'])
         user.save()
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key, 'user': serializer.data}, status=status.HTTP_201_CREATED)
+
+        # Mova a linha abaixo para garantir que 'refresh' seja definido antes de ser usado
+        refresh = RefreshToken.for_user(user)
+
+        token = Token.objects.get(user=user)
+
+        response_data = {
+            'token': token.key,
+            'user': serializer.data
+        }
+
+        response = Response(response_data, status=status.HTTP_201_CREATED)
+
+        # Configuração do cookie para o access_token
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            value=token.key,
+            expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+
+        # Configuração do cookie para o refresh_token
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+            value=str(refresh),
+            expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+
+        response["X-CSRFToken"] = csrf.get_token(request)
+        return response
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -43,7 +81,38 @@ def login(request):
     if user and user.check_password(password):
         token, created = Token.objects.get_or_create(user=user)
         serializer = UserSerializer(user)
-        return Response({'token': token.key, 'user': serializer.data}, status=status.HTTP_200_OK)
+
+        # Adição da definição de "refresh" aqui
+        refresh = RefreshToken.for_user(user)
+
+        response_data = {
+            'token': token.key,
+            'user': serializer.data
+        }
+
+        response = Response(response_data, status=status.HTTP_200_OK)
+
+        # Configuração do cookie para o access_token
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            value=token.key,
+            expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+            value=str(refresh),
+            expires=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+            secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+            httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+            samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+        )
+
+        response["X-CSRFToken"] = csrf.get_token(request)
+        return response
 
     return Response({'detail': 'Credenciais inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -126,3 +195,12 @@ def get_user_by_token(request):
     user = request.user
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@logout_swagger
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    request.user.auth_token.delete()
+    return Response("Logout realizado com sucesso", status=status.HTTP_200_OK)

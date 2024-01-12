@@ -27,6 +27,7 @@ urlpatterns = [
     path('update_user/<int:id>', views.update_user),
     path('get_user_by_id/<int:id>', views.get_user_by_id),
     path('get_user_by_token', views.get_user_by_token),
+    path('logout', views.logout),
     path('', schema_view.with_ui('swagger',
          cache_timeout=0), name='schema-swagger-ui'),
 ]

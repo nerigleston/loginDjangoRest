@@ -150,3 +150,24 @@ get_user_by_id_swagger = swagger_auto_schema(
     },
     operation_description='Obtém as informações do usuário com base no ID fornecido.'
 )
+
+
+get_user_by_token_swagger = swagger_auto_schema(
+    methods=['GET'],
+    manual_parameters=[
+        openapi.Parameter(
+            'Authorization',
+            openapi.IN_HEADER,
+            description='Token de autenticação',
+            format='Token <token_value>',
+            type=openapi.TYPE_STRING,
+            required=True,
+        ),
+    ],
+    responses={
+        200: 'Informações do usuário obtidas com sucesso.',
+        401: 'Não autorizado. Verifique as credenciais fornecidas.',
+        403: 'Acesso proibido. Verifique suas permissões.',
+    },
+    operation_description='Obtém as informações do usuário com base no token de autenticação.'
+)

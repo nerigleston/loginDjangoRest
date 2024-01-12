@@ -14,7 +14,8 @@ from .swagger_docs import (
     get_all_users_swagger,
     delete_user_swagger,
     update_user_swagger,
-    get_user_by_id_swagger
+    get_user_by_id_swagger,
+    get_user_by_token_swagger
 )
 
 
@@ -113,5 +114,15 @@ def get_user_by_id(request, id):
     if request.user != user:
         return Response("Você não tem permissão para visualizar este usuário", status=status.HTTP_403_FORBIDDEN)
 
+    serializer = UserSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@get_user_by_token_swagger
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_by_token(request):
+    user = request.user
     serializer = UserSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
